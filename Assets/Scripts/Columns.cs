@@ -19,7 +19,7 @@ public class Columns : MonoBehaviour
     private float floChessScale;        //棋子的大小
     private float floChessColumnsSpace;//棋子列间间距
     internal int intRowNumberByCurrentColums;//当前行的列数量
-
+    internal int intNeedAddingChessNumber = 0; //消除之后当前列需要增加的棋子的数量
     internal int remainNumByColAfterDes; //当前列棋子消除后的剩余数量
 
     void Awake()
@@ -99,11 +99,11 @@ public class Columns : MonoBehaviour
             //如果是第一行棋子，它没有上邻居
             if(i==0)
             {
-                ChessList[0].neighborChessArray[2] = null;
+                ChessList[i].neighborChessArray[2] = null;
             }
             else
             {
-                ChessList[0].neighborChessArray[2] =
+                ChessList[i].neighborChessArray[2] =
                     ColumnsManager.Instance.ColumnsArray[intCurrentColumnsNumber].ChessList[i - 1];
             }
             //同理，最下一行棋子没有下邻居
@@ -120,6 +120,50 @@ public class Columns : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 在当前列增加新的棋子
+    /// </summary>
+   internal void AddNewChessByCurrentColumns()
+    {
+        for (int i = 1; i <= intNeedAddingChessNumber; i++)
+        {
+                      //我们有六张图，随机生成0~5这六个数字,取得随机的一个棋子预设
+            int intRandomNumber = Random.Range(0, 6);
+            GameObject chessPrefabs = GameManager.Instance.ChessPrefabsArray[intRandomNumber];
+
+            //依据取得的预设，克隆出一个棋子，并放在棋盘正确位置
+            GameObject chessObj = Instantiate(chessPrefabs,
+                new Vector3(intCurrentColumnsNumber * floChessColumnsSpace, i, chessPrefabs.transform.position.z),
+                Quaternion.identity) as GameObject;
+
+            //存入集合中
+            //ChessList.Add(chessObj.GetComponent<Chess>());
+
+            ChessList.Insert(0, chessObj.GetComponent<Chess>());//在集合最前面加入棋子
+            //确定父子关系
+            chessObj.transform.parent = this.transform;
+            //确定棋子的大小
+            chessObj.transform.localScale = new Vector3(floChessScale, floChessScale, floChessScale);
+        }
+    }
+
+
+
+    /// <summary>
+    /// 新棋子的下落动画
+    /// </summary>
+   internal void PlayNewChessDropDown()
+   {
+       for (int i = 0; i < GameManager.Instance.InRowNumber; i++)
+       {
+           Chess chessObj = ChessList[i];
+           iTween.MoveTo(chessObj.gameObject, new Vector3(intCurrentColumnsNumber * floChessColumnsSpace, -i, GameManager.Instance.ChessPrefabsArray[0].transform.position.z),1f);
+       }
+       //每次补充新的棋子后，需要补充增加棋子数量要置零
+       intNeedAddingChessNumber = 0;
+   }
+    
 
 }
 

@@ -27,28 +27,29 @@ public class ChessOperator : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
         //为整个棋盘上的棋子分配邻居
         AssignNeighbor();
-
-        yield return new WaitForSeconds(0.5f);
+        //测试分配结果是否正确
+        //Test();
         // 更新棋子标志位
         SetEveryChessFlag();
-        
-        yield return new WaitForSeconds(0.5f);
-
         //检测当前棋盘是否存在“消除”选项
         CheckExitBurstItem();
+
         yield return new WaitForSeconds(0.5f);
 
         if(ifExitBurstItems)
         {
-            DestryChessIfCanBurst();
+           
             //删除当前棋盘的棋子
-
+            DestryChessIfCanBurst();
+            yield return new WaitForSeconds(0.5f);
             //增加新的棋子
-
+            AddNewChessByTop();
+            yield return new WaitForSeconds(0.5f);
             // 新的棋子下落动画处理
+            PlayNewChessDropDown();
 
             //迭代循环检测
-           // StartCoroutine("CheckIfCanBurst"); //相当于递归
+            StartCoroutine("CheckIfCanBurst"); //相当于递归
         }
         else
         {
@@ -110,6 +111,7 @@ public class ChessOperator : MonoBehaviour {
                 }
             }
         }
+        ifExitBurstItems = false;
         return false;
     }
     private void Test()
@@ -129,12 +131,58 @@ public class ChessOperator : MonoBehaviour {
     {
         for (int col = 0; col < ColumnsManager.Instance.ColumnsArray.Length; col++)
         {
-            for (int row = 0; row < ColumnsManager.Instance.ColumnsArray[col].ChessList.Count; row++)
+            for (int row = ColumnsManager.Instance.ColumnsArray[col].ChessList.Count-1; row >=0; row--) //倒过来写！！！
             {
-                ColumnsManager.Instance.ColumnsArray[col].ChessList[row].DestroyChess();
+                if (ColumnsManager.Instance.ColumnsArray[col].ChessList[row].canBurstCurrentChess == true) //如果当前的棋子可以删除
+                {
+                    //销毁游戏对象
+                    ColumnsManager.Instance.ColumnsArray[col].ChessList[row].DestroyChess();
+                    //同时销毁list中的脚本
+                    ColumnsManager.Instance.ColumnsArray[col].ChessList.RemoveAt(row);
+                    //该列需要增加的棋子数目增加1
+                    ColumnsManager.Instance.ColumnsArray[col].intNeedAddingChessNumber += 1;
+                }
+
             }
         }
     }
+
+    /// <summary>
+    /// 删除掉可以删除的棋子
+    /// </summary>
+  /*  private void DestryChessIfCanBurst()
+    {
+        for (int col = 0; col < ColumnsManager.Instance.ColumnsArray.Length; col++)
+        {
+            for (int row = 0; row < ColumnsManager.Instance.ColumnsArray[col].ChessList.Count; row++)
+            {
+                    ColumnsManager.Instance.ColumnsArray[col].ChessList[row].DestroyChess();
+            }
+        }
+    }*/
+
+    /// <summary>
+    /// 在列的顶部增加新的棋子
+    /// </summary>
+    private void AddNewChessByTop()
+    {
+        for (int col = 0; col < ColumnsManager.Instance.ColumnsArray.Length; col++)
+        {
+            ColumnsManager.Instance.ColumnsArray[col].AddNewChessByCurrentColumns();
+        }
+    }
+ 
+    /// <summary>
+    /// 整个棋盘每一列播放棋子的下落动画
+    /// </summary>
+    private void PlayNewChessDropDown()
+    {
+        for (int i = 0; i < ColumnsManager.Instance.ColumnsArray.Length; i++)
+        {
+            ColumnsManager.Instance.ColumnsArray[i].PlayNewChessDropDown();//每一列播放动画
+        }
+    }
+
 }
 
 

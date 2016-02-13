@@ -45,16 +45,18 @@ public class Chess : MonoBehaviour {
 
         //判断是否满足消除的条件
         if (
-            (chessObj.gameObject.name == strChessLest1&& chessObj.gameObject.name == strChessLest2)||
-            (chessObj.gameObject.name == strChessLest1&& chessObj.gameObject.name == strChessRight1)||
-            (chessObj.gameObject.name == strChessRight1&& chessObj.gameObject.name == strChessRight2)||
-            (chessObj.gameObject.name == strChessUp1&& chessObj.gameObject.name == strChessUp2)||
-            (chessObj.gameObject.name == strChessUp1&& chessObj.gameObject.name == strChessDown1)||
-            (chessObj.gameObject.name == strChessDown1&& chessObj.gameObject.name == strChessDown2)
-            )
+            (chessObj.gameObject.name == strChessLest1 && chessObj.gameObject.name == strChessLest2) ||
+            (chessObj.gameObject.name == strChessLest1 && chessObj.gameObject.name == strChessRight1) ||
+            (chessObj.gameObject.name == strChessRight1 && chessObj.gameObject.name == strChessRight2) ||
+            (chessObj.gameObject.name == strChessUp1 && chessObj.gameObject.name == strChessUp2) ||
+            (chessObj.gameObject.name == strChessUp1 && chessObj.gameObject.name == strChessDown1) ||
+            (chessObj.gameObject.name == strChessDown1 && chessObj.gameObject.name == strChessDown2)
+           )
         {
             canBurst = true;
         }
+        else
+            canBurst = false;
         return canBurst;
     }
     /// <summary>
@@ -64,13 +66,17 @@ public class Chess : MonoBehaviour {
     /// true:当前棋子可以消除
     /// false:当前棋子不可以消除
     /// </returns>
-    internal bool MakeFlagIfCanBurest()
+    internal void  MakeFlagIfCanBurest()
     {
-        if(CanBurstByChess(this))
+        if (CanBurstByChess(this))
         {
             canBurstCurrentChess = true;
         }
-        return canBurstCurrentChess;
+        else
+        {
+            canBurstCurrentChess=false ;
+        }
+
     }
 
     /// <summary>
