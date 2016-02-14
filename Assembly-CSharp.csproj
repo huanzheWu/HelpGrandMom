@@ -48,9 +48,11 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Chess.cs" />
      <Compile Include="Assets\Scripts\ChessOperator.cs" />
+     <Compile Include="Assets\Scripts\ChessTouch.cs" />
      <Compile Include="Assets\Scripts\Columns.cs" />
      <Compile Include="Assets\Scripts\ColumnsManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\SwapTwoChess.cs" />
      <Compile Include="Assets\Scripts\iTween.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/unity 5.3.2/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

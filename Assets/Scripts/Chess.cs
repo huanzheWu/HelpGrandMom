@@ -11,21 +11,25 @@ using System.Collections;
 
 public class Chess : MonoBehaviour {
     public static Chess Instance;
-    internal Columns fromColumns;      //该棋子属于哪一列
+    internal Columns fromColumns ;      //该棋子属于哪一列
+
     //每个棋子的邻居，数组索引0/1/2/3代表上/下/左/右邻居
     internal Chess[] neighborChessArray = new Chess[4];
     //是否能够消除当前棋子
     internal bool canBurstCurrentChess = false; 
+    //是否已经选定当前棋子
+    internal bool IsSeleteMe = false; 
+
 
     //邻居字符串，初始化时指定为“None”
-    private string strChessLest1 = "None";
-    private string strChessLest2 = "None";
-    private string strChessRight1 = "None";
-    private string strChessRight2 = "None";
-    private string strChessUp1 = "None";
-    private string strChessUp2 = "None";
-    private string strChessDown1 = "None";
-    private string strChessDown2 = "None";
+    private string strChessLest1 = "Lest1";
+    private string strChessLest2 = "Lest2";
+    private string strChessRight1 = "Right1";
+    private string strChessRight2 = "Right2";
+    private string strChessUp1 = "Up1";
+    private string strChessUp2 = "Up2";
+    private string strChessDown1 = "Down1";
+    private string strChessDown2 = "Down2";
     void Awake()
     {
         Instance = this;
@@ -48,15 +52,13 @@ public class Chess : MonoBehaviour {
             (chessObj.gameObject.name == strChessLest1 && chessObj.gameObject.name == strChessLest2) ||
             (chessObj.gameObject.name == strChessLest1 && chessObj.gameObject.name == strChessRight1) ||
             (chessObj.gameObject.name == strChessRight1 && chessObj.gameObject.name == strChessRight2) ||
-            (chessObj.gameObject.name == strChessUp1 && chessObj.gameObject.name == strChessUp2) ||
+            (chessObj.gameObject.name == strChessUp1 && chessObj.gameObject.name == strChessUp2)        ||
             (chessObj.gameObject.name == strChessUp1 && chessObj.gameObject.name == strChessDown1) ||
             (chessObj.gameObject.name == strChessDown1 && chessObj.gameObject.name == strChessDown2)
            )
         {
             canBurst = true;
         }
-        else
-            canBurst = false;
         return canBurst;
     }
     /// <summary>
@@ -149,4 +151,17 @@ public class Chess : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 选中棋子时的变化
+    /// </summary>
+    internal void SeleteMe()
+    {
+        IsSeleteMe = true;
+        this.transform.GetComponent<Renderer>().material.SetColor("_TintColor",new Color(1f,1f,1f,0.5f));
+    }
+    
+    internal void UnSeleteMe()
+    {
+        this.transform.GetComponent<Renderer>().material.SetColor("_TintColor", new Color(0.5f, 0.5f, 0.5f, 0.5f));
+    }
 }

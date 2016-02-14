@@ -13,6 +13,12 @@ using System.Collections;
 public class ChessOperator : MonoBehaviour {
     public static ChessOperator Instance;//静态实例
     internal bool ifExitBurstItems=false; //当前棋盘是否存在消除项
+
+    internal Chess chessItem1 = null;       //点击屏幕选择的第一个棋子
+    internal Chess chessItem2 = null;       //点击屏幕选择的第二个棋子
+
+    internal bool isBusy = false;   //系统是否繁忙(限制用户操作)
+
     public void Awake ()
     {
         Instance = this;
@@ -24,7 +30,9 @@ public class ChessOperator : MonoBehaviour {
 
     IEnumerator CheckIfCanBurst()
     {
-        yield return new WaitForSeconds(0.5f);
+        isBusy = true;
+
+        yield return new WaitForSeconds(0.2f);
         //为整个棋盘上的棋子分配邻居
         AssignNeighbor();
         //测试分配结果是否正确
@@ -32,11 +40,9 @@ public class ChessOperator : MonoBehaviour {
         // 更新棋子标志位
         SetEveryChessFlag();
         //检测当前棋盘是否存在“消除”选项
-        CheckExitBurstItem();
+        ifExitBurstItems  =  CheckExitBurstItem();
 
-        yield return new WaitForSeconds(0.5f);
-
-        if(ifExitBurstItems)
+        if (ifExitBurstItems)
         {
            
             //删除当前棋盘的棋子
@@ -47,12 +53,14 @@ public class ChessOperator : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
             // 新的棋子下落动画处理
             PlayNewChessDropDown();
-
+            yield return new WaitForSeconds(0.5f);
             //迭代循环检测
             StartCoroutine("CheckIfCanBurst"); //相当于递归
         }
         else
         {
+            yield return new WaitForSeconds(0.2f);
+            isBusy = false;
             print("当前棋盘没有消除选项");
         }
     }
@@ -106,12 +114,10 @@ public class ChessOperator : MonoBehaviour {
             {
                 if(ColumnsManager.Instance.ColumnsArray[col].ChessList[row].canBurstCurrentChess)
                 {
-                    ifExitBurstItems = true; //后续会改动，这里先这样
                     return true;
                 }
             }
         }
-        ifExitBurstItems = false;
         return false;
     }
     private void Test()
@@ -146,20 +152,6 @@ public class ChessOperator : MonoBehaviour {
             }
         }
     }
-
-    /// <summary>
-    /// 删除掉可以删除的棋子
-    /// </summary>
-  /*  private void DestryChessIfCanBurst()
-    {
-        for (int col = 0; col < ColumnsManager.Instance.ColumnsArray.Length; col++)
-        {
-            for (int row = 0; row < ColumnsManager.Instance.ColumnsArray[col].ChessList.Count; row++)
-            {
-                    ColumnsManager.Instance.ColumnsArray[col].ChessList[row].DestroyChess();
-            }
-        }
-    }*/
 
     /// <summary>
     /// 在列的顶部增加新的棋子

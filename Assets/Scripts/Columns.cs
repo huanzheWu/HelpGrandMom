@@ -49,14 +49,14 @@ public class Columns : MonoBehaviour
                 new Vector3(intCurrentColumnsNumber * floChessColumnsSpace, -row, chessPrefabs.transform.position.z),
                 Quaternion.identity) as GameObject;
 
-            //存入集合中
-            ChessList.Add(chessObj.GetComponent<Chess>());
+            //标注棋子所属的列
+            chessObj.GetComponent<Chess>().fromColumns = this;
             //确定父子关系
             chessObj.transform.parent = this.transform;
             //确定棋子的大小
             chessObj.transform.localScale = new Vector3(floChessScale, floChessScale, floChessScale);
-            //标注棋子所属的列
-            //chessObj.GetComponent<Chess>().fromColumns = this;
+            //存入集合中
+            ChessList.Add(chessObj.GetComponent<Chess>());
         }
 
     }
@@ -128,8 +128,9 @@ public class Columns : MonoBehaviour
     {
         for (int i = 1; i <= intNeedAddingChessNumber; i++)
         {
-                      //我们有六张图，随机生成0~5这六个数字,取得随机的一个棋子预设
+            //我们有六张图，随机生成0~5这六个数字,取得随机的一个棋子预设
             int intRandomNumber = Random.Range(0, 6);
+
             GameObject chessPrefabs = GameManager.Instance.ChessPrefabsArray[intRandomNumber];
 
             //依据取得的预设，克隆出一个棋子，并放在棋盘正确位置
@@ -137,15 +138,17 @@ public class Columns : MonoBehaviour
                 new Vector3(intCurrentColumnsNumber * floChessColumnsSpace, i, chessPrefabs.transform.position.z),
                 Quaternion.identity) as GameObject;
 
-            //存入集合中
-            //ChessList.Add(chessObj.GetComponent<Chess>());
-
-            ChessList.Insert(0, chessObj.GetComponent<Chess>());//在集合最前面加入棋子
+            //标注棋子所属的列
+            chessObj.GetComponent<Chess>().fromColumns = this;
             //确定父子关系
             chessObj.transform.parent = this.transform;
             //确定棋子的大小
             chessObj.transform.localScale = new Vector3(floChessScale, floChessScale, floChessScale);
+            //存入集合中
+            ChessList.Insert(0, chessObj.GetComponent<Chess>());//在集合最前面加入棋子
         }
+        //每次补充新的棋子后，需要补充增加棋子数量要置零
+        intNeedAddingChessNumber = 0;
     }
 
 
@@ -160,10 +163,7 @@ public class Columns : MonoBehaviour
            Chess chessObj = ChessList[i];
            iTween.MoveTo(chessObj.gameObject, new Vector3(intCurrentColumnsNumber * floChessColumnsSpace, -i, GameManager.Instance.ChessPrefabsArray[0].transform.position.z),1f);
        }
-       //每次补充新的棋子后，需要补充增加棋子数量要置零
-       intNeedAddingChessNumber = 0;
    }
     
-
 }
 
