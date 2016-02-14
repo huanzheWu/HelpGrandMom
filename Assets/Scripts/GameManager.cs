@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
     public int InRowNumber = 5; //棋盘的行数量
     public float floColumnSpace = 1;//棋盘的列间距
     public float floChessScale = 1;//棋子大小的缩放
+    public ParticleEmitter[] PePrefabsArray; //粒子系统数组
 
     void Awake()
     {

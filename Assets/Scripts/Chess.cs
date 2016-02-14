@@ -147,6 +147,7 @@ public class Chess : MonoBehaviour {
     {
         if(canBurstCurrentChess)
         {
+            PlayParticalEffect();
             Destroy(this.gameObject);
         }
     }
@@ -160,8 +161,24 @@ public class Chess : MonoBehaviour {
         this.transform.GetComponent<Renderer>().material.SetColor("_TintColor",new Color(1f,1f,1f,0.5f));
     }
     
+    /// <summary>
+    /// 取消选择棋子
+    /// </summary>
     internal void UnSeleteMe()
     {
         this.transform.GetComponent<Renderer>().material.SetColor("_TintColor", new Color(0.5f, 0.5f, 0.5f, 0.5f));
+    }
+
+    /// <summary>
+    /// 播放例子效果
+    /// </summary>
+    public void PlayParticalEffect()
+    {
+        //例子效果一
+        ParticleEmitter pePrefabs = GameManager.Instance.PePrefabsArray[0];
+        //克隆预设
+        ParticleEmitter peCloneObj = Instantiate(pePrefabs, new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z), Quaternion.identity) as ParticleEmitter;
+        //播放粒子系统
+        peCloneObj.emit = true;
     }
 }
