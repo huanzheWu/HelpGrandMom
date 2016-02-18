@@ -36,9 +36,9 @@ public class AudioManager : MonoBehaviour {
         }
         //处理音频源
         _AudioSourceArray=this.GetComponents<AudioSource>();
-        _AudioSource_BackgroundAudio = _AudioSourceArray[0];
-        _AudioSource_AudioEffectA = _AudioSourceArray[1];
-        _AudioSource_AudioEffectB = _AudioSourceArray[2];
+        _AudioSource_BackgroundAudio = _AudioSourceArray[0]; //默认音频源的第一个为背景音乐
+        _AudioSource_AudioEffectA = _AudioSourceArray[1];    //音效源1
+        _AudioSource_AudioEffectB = _AudioSourceArray[2];    //音效源2
 
         //从数据持久化中得到音量数值
         if (PlayerPrefs.GetFloat("AudioBackgroundVolumns")>=0){
@@ -56,7 +56,8 @@ public class AudioManager : MonoBehaviour {
     /// 播放背景音乐
     /// </summary>
     /// <param name="audioClip">音频剪辑</param>
-    public static void PlayBackground(AudioClip audioClip){
+    public static void PlayBackground(AudioClip audioClip)
+    {
         //防止背景音乐的重复播放。
         if (_AudioSource_BackgroundAudio.clip == audioClip){
             return;
